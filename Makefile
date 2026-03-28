@@ -16,7 +16,7 @@ kernel.elf: $(OBJECTS)
 
 KernuOS.iso: Kernel.elf
 	cp kernel.elf iso/boot/kernel.elf
-	grub-mkrescue -o KernuOS.iso iso
+	i686-elf-grub-mkrescue -o KernuOS.iso iso
 
 run: KernuOS.iso
 	qemu-system-i386 -cdrom KernuOS.iso
@@ -28,4 +28,4 @@ run: KernuOS.iso
 	$(AS) $(ASFLAGS) $< -o $@
 
 clean: 
-	rm -rf *.o kernel.elf KernuOS.iso
+	rm -rf *.o kernel.elf KernuOS.is
