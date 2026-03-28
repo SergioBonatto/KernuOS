@@ -1,13 +1,31 @@
-LD = i686-elf-ld
-AS = nasm
+LD	= i686-elf-ld
+CC	= i686-elf-gcc
+AS	= nasm
 
-LDFLAGS = -T link.ld -melf_i386
+OBJECTS	=	loader.o kmain.o
+CFLAGS	=	-m32 -nostdlib -fno-builtin -fno-stack-protector \
+			-nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
 
-kernel.elf: loader.o
-	$(LD) $(LDFLAGS) loader.o -o kernel.elf
+LDFLAGS	=	-T link.ld -melf_i386
+ASFLAGS	=	-f elf32
 
-loader.o: loader.s
-	$(AS) -f elf32 loader.s -o loader.o
+all: kernel.elf
 
-clean:
-	rm -f *.o *.elf
+kernel.elf: $(OBJECTS)
+	$(LD) $(LDFLAGS) $(OBJECTS) -o kernel.elf
+
+KernuOS.iso: Kernel.elf
+	cp kernel.elf iso/boot/kernel.elf
+	grub-mkrescue -o KernuOS.iso iso
+
+run: KernuOS.iso
+	qemu-system-i386 -cdrom KernuOS.iso
+
+%.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
+
+%.o: %.s
+	$(AS) $(ASFLAGS) $< -o $@
+
+clean: 
+	rm -rf *.o kernel.elf KernuOS.iso
