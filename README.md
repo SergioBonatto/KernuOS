@@ -7,6 +7,12 @@ A small educational OS written in C, following [Little OS Book](https://littleos
 > Everything here is subject to change — this is an active WIP.
 
 ## Run
+```sh
+    make clean
+    make run
+
+```
+
 
 ```sh
 qemu-system-i386 -cdrom KernuOS.iso -m 32M
